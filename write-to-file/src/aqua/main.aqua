@@ -1,0 +1,27 @@
+aqua Main
+
+import App from "deployed.app.aqua"
+import IOResult, UseFilesys from "services/use_filesys.aqua"
+-- import FilesysAdapter from "services/filesys_adapter.aqua"
+export App, write_to_file, read_from_file, remove_file
+
+func write_to_file(filename: string, content: string) -> IOResult:
+    services <- App.services()
+    on services.use_filesys.default!.peerId:
+        UseFilesys services.use_filesys.default!.serviceId
+        res <- UseFilesys.write_file(filename, content)
+    <- res
+
+func read_from_file(filename:string) -> IOResult:
+    services <- App.services()
+    on services.use_filesys.default!.peerId:
+        UseFilesys services.use_filesys.default!.serviceId
+        res <- UseFilesys.read_file(filename)
+    <- res
+
+func remove_file(filename: string) -> IOResult:
+    services <- App.services()
+    on services.use_filesys.default!.peerId:
+        UseFilesys services.use_filesys.default!.serviceId
+        res <- UseFilesys.rm_file(filename)
+    <- res
